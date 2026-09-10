@@ -17,4 +17,12 @@ public class SupportController {
     public SupportResponse handleSupportRequest(@RequestBody SupportRequest request) {
         return supportAgentService.handleSupportRequest(request.getMessage());
     }
+
+    @Autowired
+    private EvaluationService evaluationService;
+
+    @PostMapping("/evaluate")
+    public java.util.Map<String, Object> evaluatePipeline() {
+        return evaluationService.evaluate("golden_set.csv");
+    }
 }

@@ -1,0 +1,6 @@
+user_message,expected_intent
+"I was charged twice for my app store purchase. Please refund the extra amount.",Refund
+"How do I reset my Apple ID password?",Query
+"My new iPhone battery drains in 2 hours. This is unacceptable!",Complaint
+"The screen on my macbook keeps freezing when I open Safari.",TechSupport
+"Where is the nearest Apple Store in London?",Query

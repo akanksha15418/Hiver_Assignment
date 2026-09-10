@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiver AI Agent</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4fdf6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #15803d;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(21, 128, 61, 0.08);
+            padding: 30px;
+            border-top: 5px solid #16a34a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #16a34a;
+        }
+
+        button {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #15803d;
+        }
+
+        button:disabled {
+            background-color: #86efac;
+            cursor: not-allowed;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: none;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+        }
+
+        .result-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .escalate-badge {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .reply-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #1f2937;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #16a34a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Hiver AI Support Agent</h1>
+        <p>Intelligently process and draft replies for incoming tickets.</p>
+    </div>
+
+    <div class="container">
+        <div class="form-group">
+            <label for="messageInput">Customer Message</label>
+            <textarea id="messageInput" placeholder="Paste the customer's tweet or message here..."></textarea>
+        </div>
+        
+        <button id="analyzeBtn" onclick="analyzeMessage()">Analyze & Draft Reply</button>
+        
+        <div class="loader" id="loader">Processing via AI Pipeline...</div>
+
+        <div class="results" id="results">
+            <div class="result-item">
+                <div class="result-label">Detected Intent</div>
+                <div class="badge" id="intentBadge">Query</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Escalation Status</div>
+                <div class="badge" id="escalationBadge">No Action</div>
+                <p id="escalationReason" style="font-size: 13px; color: #4b5563; margin-top: 5px;"></p>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Suggested Draft Reply</div>
+                <div class="reply-box" id="draftReply"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function analyzeMessage() {
+            const message = document.getElementById('messageInput').value.trim();
+            if (!message) return;
+
+            const btn = document.getElementById('analyzeBtn');
+            const loader = document.getElementById('loader');
+            const results = document.getElementById('results');
+
+            // Reset UI
+            btn.disabled = true;
+            results.style.display = 'none';
+            loader.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/support/handle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (!response.ok) throw new Error("API failed");
+
+                const data = await response.json();
+
+                // Populate results
+                document.getElementById('intentBadge').innerText = data.intent || 'Unknown';
+                
+                const escalateBadge = document.getElementById('escalationBadge');
+                const escalateReason = document.getElementById('escalationReason');
+                
+                if (data.escalate) {
+                    escalateBadge.innerText = 'Escalate to Human';
+                    escalateBadge.className = 'badge escalate-badge';
+                    escalateReason.innerText = "Reason: " + (data.escalationReason || 'Complex issue');
+                    escalateReason.style.display = 'block';
+                } else {
+                    escalateBadge.innerText = 'Auto-Handle';
+                    escalateBadge.className = 'badge';
+                    escalateReason.style.display = 'none';
+                }
+
+                document.getElementById('draftReply').innerText = data.draftReply || 'No reply generated.';
+
+                // Show results
+                results.style.display = 'block';
+
+            } catch (error) {
+                alert('Error analyzing the message. Make sure the backend is running.');
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>

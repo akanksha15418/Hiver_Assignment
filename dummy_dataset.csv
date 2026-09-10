@@ -1,0 +1,9 @@
+tweet_id,author_id,inbound,created_at,text,response_tweet_id,in_response_to_tweet_id
+1,user1,True,2017-10-31 22:10:47,"I have an issue with my iPhone battery",2,
+2,AppleSupport,False,2017-10-31 22:15:00,"@user1 We can help with that. Please DM us.",,1
+3,user2,True,2017-10-31 22:20:00,"My macbook screen is flickering",4,
+4,AppleSupport,False,2017-10-31 22:25:00,"@user2 Let's look into it. Have you tried restarting?",,3
+5,user3,True,2017-10-31 22:30:00,"Where is my order?",6,
+6,AmazonHelp,False,2017-10-31 22:35:00,"@user3 We're sorry for the delay. DM us your tracking number.",,5
+7,user4,True,2017-10-31 22:40:00,"Can I get a refund for my recent app store purchase?",8,
+8,AppleSupport,False,2017-10-31 22:45:00,"@user4 We can help with app store refunds. Please follow the link in our bio.",,7

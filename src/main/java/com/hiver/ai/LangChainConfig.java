@@ -2,6 +2,8 @@ package com.hiver.ai;
 
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.googleai.GoogleAiEmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -15,6 +17,14 @@ public class LangChainConfig {
 
     @Value("${gemini.api.key}")
     private String geminiApiKey;
+
+    @Bean
+    public ChatLanguageModel chatLanguageModel() {
+        return GoogleAiGeminiChatModel.builder()
+                .apiKey(geminiApiKey)
+                .modelName("gemini-1.5-flash")
+                .build();
+    }
 
     @Bean
     public EmbeddingModel embeddingModel() {

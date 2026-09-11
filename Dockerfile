@@ -20,6 +20,9 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
+# Install libstdc++ required by ONNX Runtime (used by AllMiniLmL6V2EmbeddingModel)
+RUN apk add --no-cache libstdc++
+
 # Expose port 8080 (the default port for Spring Boot)
 EXPOSE 8080
 

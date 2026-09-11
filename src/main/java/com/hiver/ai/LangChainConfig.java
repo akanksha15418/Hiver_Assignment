@@ -1,11 +1,10 @@
 package com.hiver.ai;
 
-import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiEmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +21,18 @@ public class LangChainConfig {
     public ChatLanguageModel chatLanguageModel() {
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(geminiApiKey)
-                .modelName("gemini-3.5-flash")
+                .modelName("gemini-2.0-flash")
                 .build();
     }
 
     @Bean
     public EmbeddingModel embeddingModel() {
-        return new AllMiniLmL6V2EmbeddingModel();
+        // Use Gemini's embedding API instead of local ONNX model.
+        // The local AllMiniLmL6V2EmbeddingModel requires >512MB RAM (OOM on Render free tier).
+        return GoogleAiGeminiEmbeddingModel.builder()
+                .apiKey(geminiApiKey)
+                .modelName("text-embedding-004")
+                .build();
     }
 
     @Bean

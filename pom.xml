@@ -44,6 +44,13 @@
             <version>1.10.0</version>
         </dependency>
 
+        <!-- Quantized Local Embeddings (~23MB vs 90MB full model, fits in Render 512MB free tier) -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings-all-minilm-l6-v2-q</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

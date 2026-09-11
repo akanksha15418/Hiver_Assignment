@@ -4,7 +4,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2q.AllMiniLmL6V2QuantizedEmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,12 +27,10 @@ public class LangChainConfig {
 
     @Bean
     public EmbeddingModel embeddingModel() {
-        // Use Gemini's embedding API instead of local ONNX model.
-        // The local AllMiniLmL6V2EmbeddingModel requires >512MB RAM (OOM on Render free tier).
-        return GoogleAiGeminiEmbeddingModel.builder()
-                .apiKey(geminiApiKey)
-                .modelName("text-embedding-004")
-                .build();
+        // Using the QUANTIZED model (~23MB) instead of full model (~90MB).
+        // Fits comfortably within Render's 512MB free tier.
+        // Works because we are on Debian JRE (glibc) which ONNX Runtime requires.
+        return new AllMiniLmL6V2QuantizedEmbeddingModel();
     }
 
     @Bean

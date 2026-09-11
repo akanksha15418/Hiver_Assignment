@@ -1,4 +1,4 @@
-# Stage 1: Build the application
+# Stage 1: Build the application (Alpine is fine for compiling Java)
 FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
@@ -17,11 +17,11 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Run the application
-FROM eclipse-temurin:17-jre-alpine
+# MUST use a Debian/glibc-based image (NOT alpine) because ONNX Runtime
+# native libraries require glibc (libstdc++, ld-linux-x86-64.so.2).
+# Alpine uses musl libc which is fundamentally incompatible.
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-
-# Install libstdc++ required by ONNX Runtime (used by AllMiniLmL6V2EmbeddingModel)
-RUN apk add --no-cache libstdc++
 
 # Expose port 8080 (the default port for Spring Boot)
 EXPOSE 8080

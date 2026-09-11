@@ -30,4 +30,6 @@ EXPOSE 8080
 COPY --from=build /app/target/ai-0.0.1-SNAPSHOT.jar app.jar
 
 # Run the jar file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# -Xms: initial heap, -Xmx: max heap
+# Render free tier has 512MB RAM; we give Java 400MB to load the ONNX embedding model
+ENTRYPOINT ["java", "-Xms128m", "-Xmx400m", "-jar", "app.jar"]

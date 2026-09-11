@@ -1,0 +1,33 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+log/
+logs/
+*.log
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode/
+
+# Environment Variables
+.env
+
+# Data Files (optional to ignore)
+subset_dataset.csv

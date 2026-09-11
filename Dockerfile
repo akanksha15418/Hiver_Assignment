@@ -9,6 +9,7 @@ COPY mvnw .
 COPY mvnw.cmd .
 
 # We download dependencies first to cache them in Docker layer
+RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline -B || true
 
 # Copy the source code and build the application

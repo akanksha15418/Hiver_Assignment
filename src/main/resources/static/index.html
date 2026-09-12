@@ -159,6 +159,10 @@
 
     <div class="container">
         <div class="form-group">
+            <label for="companyInput">Company Name <span style="font-weight:400; color:#9ca3af;">(optional)</span></label>
+            <input type="text" id="companyInput" placeholder="e.g. Hiver, Zomato, Razorpay..." style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:15px; outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='#16a34a'" onblur="this.style.borderColor='#d1d5db'">
+        </div>
+        <div class="form-group">
             <label for="messageInput">Customer Message</label>
             <textarea id="messageInput" placeholder="Paste the customer's tweet or message here..."></textarea>
         </div>
@@ -210,7 +214,10 @@
                 const response = await fetch(`${BACKEND_URL}/api/support/handle`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ 
+                        message: message,
+                        companyName: document.getElementById('companyInput').value.trim() || null
+                    })
                 });
 
                 if (!response.ok) throw new Error("API failed");

@@ -26,7 +26,7 @@ public class SupportAgentService {
     @Autowired
     private EmbeddingStore<TextSegment> embeddingStore;
 
-    public SupportResponse handleSupportRequest(String message) {
+    public SupportResponse handleSupportRequest(String message, String companyName) {
         SupportResponse response = new SupportResponse();
 
         // 1. Intent Classification
@@ -47,7 +47,11 @@ public class SupportAgentService {
                 .map(match -> match.embedded().text())
                 .collect(Collectors.joining("\n"));
 
-        String replyPrompt = "You are a helpful customer support agent. Draft a concise and polite reply to the customer's message. Use the following similar past resolutions for context if applicable:\n\n"
+        String agentContext = (companyName != null && !companyName.isBlank())
+                ? "You are a helpful customer support agent for " + companyName + "."
+                : "You are a helpful customer support agent.";
+
+        String replyPrompt = agentContext + " Draft a concise and polite reply to the customer's message. Use the following similar past resolutions for context if applicable:\n\n"
                 + "Context: " + contextContext + "\n\n"
                 + "Customer Message: " + message + "\n\n"
                 + "Reply:";

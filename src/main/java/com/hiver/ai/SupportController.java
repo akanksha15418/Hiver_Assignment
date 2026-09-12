@@ -17,7 +17,7 @@ public class SupportController {
 
     @PostMapping("/handle")
     public SupportResponse handleSupportRequest(@RequestBody SupportRequest request) {
-        return supportAgentService.handleSupportRequest(request.getMessage());
+        return supportAgentService.handleSupportRequest(request.getMessage(), request.getCompanyName());
     }
 
     @Autowired

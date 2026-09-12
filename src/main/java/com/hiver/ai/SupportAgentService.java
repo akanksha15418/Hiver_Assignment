@@ -47,7 +47,7 @@ public class SupportAgentService {
                 .map(match -> match.embedded().text())
                 .collect(Collectors.joining("\n"));
 
-        String replyPrompt = "You are a helpful customer support agent for AppleSupport. Draft a concise and polite reply to the customer's message. Use the following similar past resolutions for context if applicable:\n\n"
+        String replyPrompt = "You are a helpful customer support agent. Draft a concise and polite reply to the customer's message. Use the following similar past resolutions for context if applicable:\n\n"
                 + "Context: " + contextContext + "\n\n"
                 + "Customer Message: " + message + "\n\n"
                 + "Reply:";

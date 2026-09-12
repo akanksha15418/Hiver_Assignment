@@ -37,7 +37,7 @@ public class EvaluationService {
                 String userMessage = csvRecord.get("user_message");
                 String expectedIntent = csvRecord.get("expected_intent");
 
-                SupportResponse response = supportAgentService.handleSupportRequest(userMessage);
+                SupportResponse response = supportAgentService.handleSupportRequest(userMessage, null);
 
                 if (expectedIntent.equalsIgnoreCase(response.getIntent())) {
                     correctIntents++;
